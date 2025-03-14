@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Samridh Converter - Resize, convert, and optimize your images online with ease. Secure, fast, and free to use.">
+    <meta name="keywords" content="image converter, resize images, optimize images, PNG, JPEG, WEBP, free online tool">
+    <meta name="author" content="Samridh Converter">
+    <title>Samridh Converter - Resize, Convert & Optimize Images Online</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap');
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1e1e2f, #5a0b61);
+            color: #fff;
+            text-align: center;
+            transition: background 0.5s ease-in-out, color 0.5s ease-in-out;
+        }
+
+        /* Light Mode */
+        .light-mode {
+            background: linear-gradient(135deg, #ffffff, #f0f0f0);
+            color: #000;
+        }
+        
+        .light-mode .feature-box {
+            background: rgba(0, 0, 0, 0.1);
+            color: #000;
+        }
+
+        .light-mode .btn {
+            background: linear-gradient(45deg, #007bff, #00c6ff);
+            box-shadow: 0 6px 20px rgba(0, 123, 255, 0.7);
+        }
+
+        .light-mode .btn:hover {
+            box-shadow: 0 15px 40px rgba(0, 123, 255, 0.9);
+        }
+
+        .light-mode .toggle-container {
+            background: rgba(0, 0, 0, 0.2);
+            color: #fff;
+        }
+
+        .hero {
+            padding: 80px 20px;
+            animation: fadeIn 1.2s ease-in-out;
+        }
+        
+        h1 {
+            font-size: 52px;
+            font-weight: 700;
+            text-shadow: 4px 4px 12px rgba(0, 0, 0, 0.6);
+            animation: slideIn 1.2s ease-in-out;
+        }
+        
+        p {
+            font-size: 22px;
+            max-width: 650px;
+            margin: 20px auto;
+            opacity: 0.9;
+        }
+        
+        .btn {
+            background: linear-gradient(45deg, #ff007b, #ff6a00);
+            padding: 18px 45px;
+            border-radius: 50px;
+            font-size: 32px;
+            color: white;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 25px;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 6px 20px rgba(255, 0, 123, 0.7);
+        }
+        
+        .btn:hover {
+            transform: scale(1.1) rotate(3deg);
+            box-shadow: 0 15px 40px rgba(255, 0, 123, 0.9);
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-60px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .features {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 50px;
+            animation: fadeIn 1.5s ease-in-out;
+        }
+        
+        .feature-box {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 25px;
+            border-radius: 45px;
+            width: 250px;
+            text-align: center;
+            box-shadow: 0 5px 55px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(50px);
+            transition: transform 0.3s ease-in-out;
+        }
+        
+        .feature-box:hover {
+            transform: translateY(-15px) scale(1.05);
+        }
+        
+        .feature-box h3 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        .feature-box p {
+            font-size: 16px;
+            opacity: 0.8;
+        }
+
+        /* Dark Mode Toggle */
+        .toggle-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            cursor: pointer;
+            font-size: 15px;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            backdrop-filter: blur(0px);
+        }
+    </style>
+</head>
+<body>
+    <div class="toggle-container" onclick="toggleDarkMode()">🌙 Toggle Mode</div>
+
+    <div class="hero">
+        <h1>Welcome to Samridh Converter</h1>
+        <p>Resize, convert, and optimize your images with ease using our advanced online tool.</p>
+        <a href="/img-compress.html" class="btn" target="_blank" rel="noopener noreferrer">Get Started</a>
+
+    </div>
+    
+    <div class="features">
+        <div class="feature-box">
+            <h3>Fast & Secure</h3>
+            <p>Quick image processing with high security and privacy.</p>
+        </div>
+        <div class="feature-box">
+            <h3>Multiple Formats</h3>
+            <p>Convert images to PNG, JPEG, WEBP, and more.</p>
+        </div>
+        <div class="feature-box">
+            <h3>Free to Use</h3>
+            <p>Enjoy all features with no hidden charges.</p>
+        </div>
+    </div>
+    
+    <script>
+        function toggleDarkMode() {
+            document.body.classList.toggle('light-mode');
+
+            // Save the preference to localStorage
+            if (document.body.classList.contains('light-mode')) {
+                localStorage.setItem('theme', 'light');
+            } else {
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        // Apply the saved theme on page load
+        window.onload = function() {
+            if (localStorage.getItem('theme') === 'light') {
+                document.body.classList.add('light-mode');
+            }
+        };
+    </script>
+</body>
+</html>
