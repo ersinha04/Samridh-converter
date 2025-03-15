@@ -17,58 +17,31 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start;
             min-height: 100vh;
             background: linear-gradient(135deg, #001f3f, #0074D9);
             color: #fff;
             text-align: center;
             transition: background 0.5s ease-in-out, color 0.5s ease-in-out;
+            overflow-x: hidden;
         }
 
-        /* Light Mode */
         .light-mode {
             background: linear-gradient(135deg, #ADD8E6, #87CEFA);
             color: #000;
-        }
-        
-        .light-mode .feature-box {
-            background: rgba(255, 255, 255, 0.2);
-            color: #000;
-        }
-
-        .light-mode .btn {
-            background: linear-gradient(45deg, #0056b3, #00a2ff);
-            box-shadow: 0 6px 20px rgba(0, 86, 179, 0.7);
-        }
-
-        .light-mode .btn:hover {
-            box-shadow: 0 15px 40px rgba(0, 86, 179, 0.9);
-        }
-
-        .light-mode .toggle-container {
-            background: rgba(0, 0, 0, 0.2);
-            color: #fff;
         }
 
         .hero {
             padding: 80px 20px;
             animation: fadeIn 1.2s ease-in-out;
         }
-        
+
         h1 {
             font-size: 52px;
             font-weight: 700;
             text-shadow: 4px 4px 12px rgba(0, 0, 0, 0.6);
-            animation: slideIn 1.2s ease-in-out;
         }
-        
-        p {
-            font-size: 22px;
-            max-width: 650px;
-            margin: 20px auto;
-            opacity: 0.9;
-        }
-        
+
         .btn {
             background: linear-gradient(45deg, #0056b3, #00a2ff);
             padding: 18px 45px;
@@ -81,35 +54,11 @@
             transition: all 0.3s ease-in-out;
             box-shadow: 0 6px 20px rgba(0, 86, 179, 0.7);
         }
-        
+
         .btn:hover {
             transform: scale(1.1) rotate(3deg);
-            box-shadow: 0 15px 40px rgba(0, 86, 179, 0.9);
         }
-        
-        .features {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            margin-top: 50px;
-            animation: fadeIn 1.5s ease-in-out;
-        }
-        
-        .feature-box {
-            background: rgba(255, 255, 255, 0.2);
-            padding: 25px;
-            border-radius: 45px;
-            width: 250px;
-            text-align: center;
-            box-shadow: 0 5px 55px rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(50px);
-            transition: transform 0.3s ease-in-out;
-        }
-        
-        .feature-box:hover {
-            transform: translateY(-15px) scale(1.05);
-        }
-        
+
         .toggle-container {
             position: fixed;
             top: 20px;
@@ -119,8 +68,104 @@
             padding: 10px 20px;
             background: rgba(255, 255, 255, 0.2);
             border-radius: 20px;
-            backdrop-filter: blur(0px);
+            backdrop-filter: blur(5px);
+            transition: background 0.3s;
         }
+
+        .toggle-container:hover {
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        .samridh-ai {
+            margin-top: 80px;
+            padding: 40px;
+            background: linear-gradient(15deg, #f77e5f, #eb47b);
+            border-radius: 25px;
+            width: 80%;
+            max-width: 555px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            transition: transform 0.3s ease-in-out, background 0.5s ease;
+        }
+
+        .samridh-ai:hover {
+            transform: scale(1.05);
+            background: linear-gradient(135deg, #ff6a3d, #ffb14e);
+        }
+
+        .samridh-ai h2 {
+            font-size: 36px;
+            color: #fff;
+            margin-bottom: 15px;
+        }
+
+        .samridh-ai p {
+            font-size: 18px;
+            color: #fff;
+            margin-bottom: 25px;
+        }
+
+        .samridh-ai a {
+            display: inline-block;
+            padding: 12px 30px;
+            background: #fff;
+            color: #ff7e5f;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 30px;
+            transition: background 0.3s, transform 0.3s;
+            border: 2px solid #ff7e5f;
+        }
+
+        .samridh-ai a:hover {
+            background: #ff7e5f;
+            color: #fff;
+            transform: scale(1.1);
+        }
+
+        .tools-container {
+            margin-top: 50px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .tool-box {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: 15px;
+            width: 200px;
+            text-align: center;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .tool-box:hover {
+            transform: scale(1.05);
+        }
+
+        /* Footer styling */
+        footer {
+            width: 100%;
+            background-color: #001f3f;
+            color: white;
+            padding: 15px 0;
+            position: fixed;
+            bottom: 0;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        footer a {
+            color: #ff7e5f;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
     </style>
 </head>
 <body>
@@ -129,32 +174,31 @@
     <div class="hero">
         <h1>Welcome to Samridh Converter</h1>
         <p>Resize, convert, and optimize your images with ease using our advanced online tool.</p>
-  <a href="/samridh-compress.html" class="btn">Get Started</a>
+        <a href="/samridh-compress.html" class="btn">Get Started</a>
     </div>
-    
-    <div class="features">
-        <div class="feature-box">
-            <h3>Fast & Secure</h3>
-            <p>Quick image processing with high security and privacy.</p>
-        </div>
-        <div class="feature-box">
-            <h3>Multiple Formats</h3>
-            <p>Convert images to PNG, JPEG, WEBP, and more.</p>
-        </div>
-        <div class="feature-box">
-            <h3>Free to Use</h3>
-            <p>Enjoy all features with no hidden charges.</p>
-        </div>
+
+    <div class="samridh-ai">
+        <h2>Meet Samridh AI</h2>
+        <p>Experience AI-powered image processing with smart optimization and instant results.</p>
+        <a href="#">Explore AI Features</a>
     </div>
-    
+
+    <div class="tools-container">
+        <div class="tool-box"><h3>Image Resizer</h3><p>Resize images without losing quality.</p></div>
+        <div class="tool-box"><h3>Image Converter</h3><p>Convert images between different formats.</p></div>
+        <div class="tool-box"><h3>Image Compressor</h3><p>Compress images while maintaining quality.</p></div>
+        <div class="tool-box"><h3>Background Remover</h3><p>Remove image backgrounds with AI.</p></div>
+    </div>
+
+   
+   
+        <p>Developed by ER</a></p>
+    </footer>
+
     <script>
         function toggleDarkMode() {
             document.body.classList.toggle('light-mode');
-            if (document.body.classList.contains('light-mode')) {
-                localStorage.setItem('theme', 'light');
-            } else {
-                localStorage.setItem('theme', 'dark');
-            }
+            localStorage.setItem('theme', document.body.classList.contains('light-mode') ? 'light' : 'dark');
         }
 
         window.onload = function() {
@@ -163,9 +207,5 @@
             }
         };
     </script>
-    <footer>
-        <p>&copy; 2025 Samridh Converter. All rights reserved.</p>
-        <p>Developed by ER</p>
-    </footer>
 </body>
 </html>
