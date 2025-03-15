@@ -257,8 +257,7 @@
     </div>
 
     <div class="hero">
-
-        <h1>Welcome to Samridh Technology</h4
+        <h1>Welcome to Samridh Technology</h1>
         <p>Resize, convert, and optimize your images with ease using our advanced online tool.</p>
         <a href="/Samridh-converter/img-compress.html" class="btn" target="_blank" rel="noopener noreferrer">Get Started</a>
     </div>
@@ -295,11 +294,20 @@
     </div>
 
     <script>
+        // Function to toggle dark mode
         function toggleDarkMode() {
-            document.body.classList.toggle('light-mode');
-            localStorage.setItem('theme', document.body.classList.contains('light-mode') ? 'light' : 'dark');
+            document.body.classList.toggle('light-mode');  // Toggle the light-mode class on the body
+            localStorage.setItem('theme', document.body.classList.contains('light-mode') ? 'light' : 'dark'); // Save the preference to localStorage
         }
 
+        // Check the saved theme preference and apply it on page load
         window.onload = function() {
             if (localStorage.getItem('theme') === 'light') {
-                document.body.class
+                document.body.classList.add('light-mode'); // Add the light-mode class if saved in localStorage
+            } else {
+                document.body.classList.remove('light-mode'); // Otherwise, ensure dark mode is active
+            }
+        }
+    </script>
+</body>
+</html>
