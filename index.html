@@ -25,25 +25,6 @@
             transition: background 0.5s ease-in-out, color 0.5s ease-in-out;
         }
 
-        /* Toolbox */
-        .toolbox {
-            position: fixed;
-            top: 10px;
-            left: 20px;
-            background: rgba(255, 255, 255, 0.2);
-            padding: 10px 20px;
-            border-radius: 20px;
-            font-size: 18px;
-            font-weight: bold;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-        }
-
-        .light-mode .toolbox {
-            background: rgba(0, 0, 0, 0.2);
-            color: #fff;
-        }
-        
         /* Light Mode */
         .light-mode {
             background: linear-gradient(135deg, #ADD8E6, #87CEFA);
@@ -142,15 +123,13 @@
         }
     </style>
 </head>
-<body><div class="toolbox">
-    <a href="/samridh.html" target="_blank">Samridh AI (Ask Anything)</a>
-</div>
+<body>
     <div class="toggle-container" onclick="toggleDarkMode()">🌙 Dark Mode</div>
 
     <div class="hero">
         <h1>Welcome to Samridh Converter</h1>
         <p>Resize, convert, and optimize your images with ease using our advanced online tool.</p>
-        <a href="/Samridh-converter/img-compress.html" class="btn" target="_blank" rel="noopener noreferrer">Get Started</a>
+  <a href="/samridh-compress.html" class="btn">Get Started</a>
     </div>
     
     <div class="features">
@@ -168,6 +147,22 @@
         </div>
     </div>
     
+    <script>
+        function toggleDarkMode() {
+            document.body.classList.toggle('light-mode');
+            if (document.body.classList.contains('light-mode')) {
+                localStorage.setItem('theme', 'light');
+            } else {
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        window.onload = function() {
+            if (localStorage.getItem('theme') === 'light') {
+                document.body.classList.add('light-mode');
+            }
+        };
+    </script>
     <footer>
         <p>&copy; 2025 Samridh Converter. All rights reserved.</p>
         <p>Developed by ER</p>
