@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Samridh Converter - Auto Image Compressor</title>
+  <title>Samridh Converter - Auto Image Resizer</title>
   <style>
     body {
       font-family: 'Montserrat', sans-serif;
@@ -26,6 +26,7 @@
       backdrop-filter: blur(25px);
       border: 2px solid rgba(255, 255, 255, 0.1);
       animation: fadeInScale 0.8s ease-out;
+      position: relative;
     }
     @keyframes fadeInScale {
       from { opacity: 0; transform: scale(0.9); }
@@ -84,6 +85,19 @@
       transform: translateY(-5px);
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
     }
+    #drop-zone {
+      border: 2px dashed #aaa;
+      padding: 30px;
+      border-radius: 20px;
+      margin-bottom: 20px;
+      color: #bbb;
+      background-color: rgba(0,0,0,0.2);
+    }
+    #drop-zone.dragover {
+      background-color: rgba(0, 255, 255, 0.2);
+      border-color: #00bcd4;
+      color: #fff;
+    }
     #result-container {
       margin-top: 40px;
       display: none;
@@ -115,10 +129,11 @@
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Samridh Converter - Auto Image Compressor</h1>
+  <div class="container" ondrop="handleDrop(event)" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)">
+    <h1>Samridh Converter - Auto Image Resizer</h1>
+    <div id="drop-zone">📥 Drag & Drop or Paste Image Here</div>
     <div class="input-group">
-      <label for="image-input">Select Image:</label>
+      <label for="image-input">Or Select Image:</label>
       <input type="file" id="image-input" accept="image/*" />
     </div>
     <div class="input-group">
@@ -133,9 +148,10 @@
         <option value="image/webp">WEBP</option>
       </select>
     </div>
-    <button id="resize-button">Compress Image &lt; 50KB</button>
+    <button id="resize-button">Resize Image &lt; 50KB</button>
+
     <div id="result-container">
-      <img id="result-image" src="" alt="Compressed Image" />
+      <img id="result-image" src="" alt="Resized Image" />
       <button id="download-button" onclick="downloadImage()">Download Image</button>
     </div>
   </div>
@@ -154,14 +170,59 @@
     const resultContainer = document.getElementById('result-container');
     const resultImage = document.getElementById('result-image');
     const downloadButton = document.getElementById('download-button');
+    const dropZone = document.getElementById('drop-zone');
+
+    let currentFile = null;
+
+    // Drag & Drop support
+    function handleDragOver(e) {
+      e.preventDefault();
+      dropZone.classList.add('dragover');
+    }
+
+    function handleDragLeave(e) {
+      e.preventDefault();
+      dropZone.classList.remove('dragover');
+    }
+
+    function handleDrop(e) {
+      e.preventDefault();
+      dropZone.classList.remove('dragover');
+      const file = e.dataTransfer.files[0];
+      if (file && file.type.startsWith("image/")) {
+        currentFile = file;
+        processImage(file);
+      }
+    }
+
+    // Paste image support
+    window.addEventListener('paste', (e) => {
+      const item = [...e.clipboardData.items].find(i => i.type.startsWith('image/'));
+      if (item) {
+        const file = item.getAsFile();
+        currentFile = file;
+        processImage(file);
+      }
+    });
+
+    // File input support
+    imageInput.addEventListener('change', function () {
+      const file = this.files[0];
+      if (file) {
+        currentFile = file;
+        processImage(file);
+      }
+    });
 
     resizeButton.addEventListener('click', function () {
-      const file = imageInput.files[0];
-      if (!file) {
-        alert('Please select an image.');
+      if (!currentFile) {
+        alert('Please provide an image.');
         return;
       }
+      processImage(currentFile);
+    });
 
+    function processImage(file) {
       const width = parseInt(widthInput.value);
       const height = parseInt(heightInput.value);
       const format = formatSelect.value;
@@ -178,7 +239,6 @@
         let dataURL = '';
         let byteLength = 0;
 
-        // Try reducing quality until image < 50KB or minimum quality
         while (quality >= 0.1) {
           dataURL = canvas.toDataURL(format, quality);
           const byteString = atob(dataURL.split(',')[1]);
@@ -188,7 +248,7 @@
         }
 
         if (byteLength > 50 * 1024) {
-          alert("⚠️ Unable to compress image under 50KB. Try smaller dimensions.");
+          alert("⚠️ Unable to resize under 50KB. Try smaller dimensions.");
         }
 
         resultImage.src = dataURL;
@@ -196,13 +256,13 @@
         downloadButton.style.display = 'inline-block';
       };
       img.src = URL.createObjectURL(file);
-    });
+    }
 
     function downloadImage() {
       const link = document.createElement('a');
       link.href = resultImage.src;
       const format = formatSelect.value.split('/')[1];
-      link.download = `compressed-image.${format}`;
+      link.download = `resized-image.${format}`;
       link.click();
     }
   </script>
