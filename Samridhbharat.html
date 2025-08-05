@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="hi" class=""> <!-- Add/remove "dark" class here to toggle dark mode -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>समृद्ध भारत - Real-Time News for a New India</title>
+    
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Merriweather for headlines, Open Sans for body text -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700&family=Open+Sans:wght@400;600&family=Teko:wght@500&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* Base styles using the specified font families */
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: #F9FAFB;
+            color: #111827;
+        }
+        .font-headline { font-family: 'Merriweather', serif; }
+        .font-logo { font-family: 'Teko', sans-serif; }
+
+        /* Enhanced Color UI with Gradients */
+        .accent-gradient {
+            background-image: linear-gradient(to right, #E63946, #D32F2F);
+        }
+        .text-accent-gradient {
+            background: linear-gradient(to right, #E63946, #D32F2F);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hover-accent-text:hover {
+            background: linear-gradient(to right, #E63946, #D32F2F);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Dark Mode Styles */
+        .dark body {
+            background-color: #0D1117;
+            color: #c9d1d9;
+        }
+        .dark .bg-white { background-color: #161B22; }
+        .dark .text-gray-900 { color: #f0f6fc; }
+        .dark .text-gray-800 { color: #c9d1d9; }
+        .dark .text-gray-700 { color: #8b949e; }
+        .dark .text-gray-600 { color: #8b949e; }
+        .dark .text-gray-500 { color: #6e7681; }
+        .dark .border-gray-200 { border-color: #30363d; }
+        .dark .border-gray-300 { border-color: #444c56; }
+        .dark .shadow-lg { box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3), 0 4px 6px -2px rgba(0,0,0,0.2); }
+        .dark .hover\:bg-gray-100:hover { background-color: #21262d; }
+        .dark .bg-gray-50 { background-color: #0D1117; }
+        .dark .bg-red-100 { background-color: rgba(229, 57, 70, 0.1); }
+        .dark .text-red-600 { color: #f87171; }
+
+        /* Popup Styles */
+        #popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        #popup-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        #popup-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.9);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+        }
+        #popup-overlay.active #popup-modal {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Animation for the breaking news ticker */
+        .breaking-news-item {
+            animation: fadeIn 1s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Section -->
+    <header class="bg-white shadow-md sticky top-0 z-50 border-b border-gray-200">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-3">
+                <div class="lg:hidden">
+                    <button id="mobile-menu-button" class="text-gray-800 focus:outline-none">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+                <div class="text-3xl font-bold text-gray-800 font-logo">
+                    <a href="#">समृद्ध<span class="text-accent-gradient">भारत</span></a>
+                </div>
+                <nav class="hidden lg:flex space-x-6 items-center">
+                    <a href="#" class="text-gray-700 hover-accent-text font-semibold transition duration-300">राष्ट्रीय</a>
+                    <a href="#" class="text-gray-700 hover-accent-text font-semibold transition duration-300">राजनीति</a>
+                    <a href="#" class="text-gray-700 hover-accent-text font-semibold transition duration-300">व्यापार</a>
+                    <a href="#" class="text-gray-700 hover-accent-text font-semibold transition duration-300">संपादकीय</a>
+                    <a href="#" class="text-gray-700 hover-accent-text font-semibold transition duration-300">वीडियो</a>
+                </nav>
+                <div class="flex items-center space-x-4">
+                    <i class="fa fa-search text-gray-600 cursor-pointer text-lg"></i>
+                    <button id="dark-mode-toggle" class="text-gray-600 focus:outline-none text-lg">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <button class="hidden md:block accent-gradient text-white px-4 py-1.5 rounded-full font-semibold text-sm hover:opacity-90 transition">Login</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Breaking News Ticker -->
+    <div class="accent-gradient text-white">
+        <div class="container mx-auto px-4 py-2 flex items-center text-sm md:text-base">
+            <span class="font-bold bg-black bg-opacity-20 px-2 py-1 text-xs md:text-sm rounded flex-shrink-0">BREAKING</span>
+            <div class="ml-4 overflow-hidden relative h-6 flex-1">
+                 <p id="breaking-news-content" class="absolute whitespace-nowrap breaking-news-item"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <main class="container mx-auto px-4 py-8">
+        
+        <!-- Hero Section -->
+        <section id="hero-section" class="mb-8" itemscope itemtype="http://schema.org/NewsArticle">
+            <!-- Content will be injected by JavaScript -->
+        </section>
+
+        <!-- Featured Stories Grid -->
+        <section id="featured-grid" class="mb-8">
+            <div id="featured-grid-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Content will be injected by JavaScript -->
+            </div>
+        </section>
+
+        <!-- Category-wise Sections -->
+        <section id="category-sections" class="mb-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Politics Section -->
+                <div id="politics-section">
+                    <h2 class="text-xl font-headline text-gray-800 mb-4 border-l-4 border-red-600 pl-3">राजनीति</h2>
+                    <ul class="space-y-4">
+                        <!-- Content will be injected by JavaScript -->
+                    </ul>
+                </div>
+                <!-- Sports Section -->
+                <div id="sports-section">
+                    <h2 class="text-xl font-headline text-gray-800 mb-4 border-l-4 border-red-600 pl-3">खेल</h2>
+                    <ul class="space-y-4">
+                        <!-- Content will be injected by JavaScript -->
+                    </ul>
+                </div>
+                <!-- Editor's Pick Section -->
+                <div id="editor-pick-section">
+                    <h2 class="text-xl font-headline text-gray-800 mb-4 border-l-4 border-red-600 pl-3">संपादक की पसंद</h2>
+                    <!-- Content will be injected by JavaScript -->
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer Section -->
+    <footer class="bg-gray-800 text-white mt-8">
+        <div class="container mx-auto px-4 py-10">
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-8">
+                <div class="col-span-2 md:col-span-1">
+                    <h3 class="text-lg font-semibold mb-4">समृद्ध भारत</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="text-gray-400 hover:text-white">हमारे बारे में</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">करियर</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">संपर्क करें</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">कानूनी</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="text-gray-400 hover:text-white">प्राइवेसी पॉलिसी</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">सेवा की शर्तें</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">साइटमैप</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">कैटेगरी</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="text-gray-400 hover:text-white">राष्ट्रीय</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">राजनीति</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">खेल</a></li>
+                    </ul>
+                </div>
+                <div class="col-span-2 md:col-span-2">
+                    <h3 class="text-lg font-semibold mb-4">हमें फॉलो करें</h3>
+                    <div class="flex space-x-4 mb-4">
+                        <a href="#" class="text-gray-400 hover:text-white text-xl"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white text-xl"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white text-xl"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white text-xl"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-6 text-center text-gray-500 text-sm">
+                <p>&copy; 2025 Samridh Bharat. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Animated Popup -->
+    <div id="popup-overlay">
+        <div id="popup-modal" class="bg-white w-11/12 md:max-w-md mx-auto rounded-lg shadow-lg p-8 text-center relative">
+            <button id="popup-close" class="absolute top-2 right-2 text-gray-500 hover:text-gray-800 text-2xl">&times;</button>
+            <div class="mb-4">
+                <i class="far fa-envelope-open text-5xl text-accent-gradient"></i>
+            </div>
+            <h2 class="text-2xl font-headline text-gray-900 mb-2">ज्ञान की शक्ति, सीधे आपके इनबॉक्स में।</h2>
+            <p class="text-gray-600 mb-6">दिन की सबसे महत्वपूर्ण खबरें और विश्लेषण पाने के लिए सब्सक्राइब करें।</p>
+            <form id="popup-form">
+                <input type="email" placeholder="अपना ईमेल दर्ज करें" class="w-full px-4 py-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red-500" required>
+                <button type="submit" class="w-full mt-3 accent-gradient text-white px-6 py-3 rounded-md font-semibold hover:opacity-90 transition">सब्सक्राइब</button>
+            </form>
+        </div>
+    </div>
+
+
+    <script>
+        // =================================================================
+        // MOCK CMS DATA - In a real app, this would come from an API
+        // =================================================================
+        const mockApiData = {
+            articles: [
+                { id: 1, headline: "चंद्रयान-4 मिशन को मिली हरी झंडी, चाँद से सैंपल लाने का लक्ष्य", category: "राष्ट्रीय", description: "ISRO ने अपने सबसे महत्वाकांक्षी मिशनों में से एक, चंद्रयान-4 की घोषणा की है। इस मिशन का मुख्य उद्देश्य चंद्रमा की सतह से नमूने एकत्र कर पृथ्वी पर वापस लाना है।", imageUrl: "https://placehold.co/600x400/EFEFEF/555555?text=Chandrayaan-4", publishedAt: "2025-08-05T19:12:00+05:30", readTime: 5, isHero: true, isEditorsPick: false },
+                { id: 2, headline: "शेयर बाजार में रिकॉर्ड तेजी, सेंसेक्स पहली बार 80,000 के पार", category: "व्यापार", description: "Description for economy news.", imageUrl: "https://placehold.co/400x250/EFEFEF/555555?text=Economy", publishedAt: "2025-08-05T15:00:00+05:30", readTime: 3, isHero: false, isEditorsPick: false },
+                { id: 3, headline: "ओलंपिक में भारत को पहला गोल्ड, नीरज चोपड़ा ने फिर रचा इतिहास", category: "खेल", description: "Description for sports news.", imageUrl: "https://placehold.co/400x250/EFEFEF/555555?text=Sports", publishedAt: "2025-08-05T13:30:00+05:30", readTime: 4, isHero: false, isEditorsPick: false },
+                { id: 4, headline: "भारत में 6G की टेस्टिंग शुरू, मिलेगी 100 गुना तेज स्पीड", category: "टेक", description: "Description for tech news.", imageUrl: "https://placehold.co/400x250/EFEFEF/555555?text=Tech", publishedAt: "2025-08-04T18:00:00+05:30", readTime: 4, isHero: false, isEditorsPick: false },
+                { id: 5, headline: "यूरोपीय संघ ने कार्बन उत्सर्जन पर लगाए नए प्रतिबंध", category: "विश्व", description: "Description for world news.", imageUrl: "https://placehold.co/400x250/EFEFEF/555555?text=World", publishedAt: "2025-08-03T11:00:00+05:30", readTime: 5, isHero: false, isEditorsPick: false },
+                { id: 6, headline: "संसद का मानसून सत्र आज से शुरू, विपक्ष ने की घेराबंदी की तैयारी।", category: "राजनीति", description: "", imageUrl: "", publishedAt: "2025-08-05T09:00:00+05:30", readTime: 2, isHero: false, isEditorsPick: false },
+                { id: 7, headline: "कैबिनेट में फेरबदल की अटकलें तेज, कई मंत्रियों की हो सकती है छुट्टी।", category: "राजनीति", description: "", imageUrl: "", publishedAt: "2025-08-04T21:00:00+05:30", readTime: 3, isHero: false, isEditorsPick: false },
+                { id: 8, headline: "T20 वर्ल्ड कप के लिए भारतीय टीम की घोषणा, रोहित कप्तान।", category: "खेल", description: "", imageUrl: "", publishedAt: "2025-08-05T11:00:00+05:30", readTime: 2, isHero: false, isEditorsPick: false },
+                { id: 9, headline: "विंबलडन के फाइनल में पहुंचे कार्लोस अलकराज।", category: "खेल", description: "", imageUrl: "", publishedAt: "2025-08-04T23:00:00+05:30", readTime: 1, isHero: false, isEditorsPick: false },
+                { id: 10, headline: "क्या आर्टिफिशियल इंटेलिजेंस नौकरियां खत्म कर देगा? एक विश्लेषण।", category: "संपादकीय", description: "A deep dive into the future of jobs with AI.", imageUrl: "https://placehold.co/400x250/EFEFEF/555555?text=Opinion", publishedAt: "2025-08-02T10:00:00+05:30", readTime: 8, isHero: false, isEditorsPick: true },
+            ]
+        };
+
+        // =================================================================
+        // DYNAMIC CONTENT RENDERING LOGIC
+        // =================================================================
+        document.addEventListener('DOMContentLoaded', () => {
+            const articles = mockApiData.articles;
+
+            // Render Hero Section
+            const heroArticle = articles.find(a => a.isHero);
+            if (heroArticle) renderHero(heroArticle);
+
+            // Render Featured Grid (top 4 non-hero articles)
+            const featuredArticles = articles.filter(a => !a.isHero).slice(0, 4);
+            renderFeaturedGrid(featuredArticles);
+            
+            // Render Breaking News Ticker
+            const breakingNews = articles.slice(0, 3).map(a => a.headline);
+            setupBreakingNewsTicker(breakingNews);
+
+            // Render Category Sections
+            renderCategorySection('राजनीति', articles.filter(a => a.category === 'राजनीति'), '#politics-section ul');
+            renderCategorySection('खेल', articles.filter(a => a.category === 'खेल'), '#sports-section ul');
+            
+            // Render Editor's Pick
+            const editorsPickArticle = articles.find(a => a.isEditorsPick);
+            if (editorsPickArticle) renderEditorsPick(editorsPickArticle);
+        });
+        
+        function renderHero(article) {
+            const heroContainer = document.getElementById('hero-section');
+            heroContainer.innerHTML = `
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+                    <div class="grid grid-cols-1 md:grid-cols-2">
+                        <div class="p-6 flex flex-col justify-center">
+                            <span class="text-xs font-semibold text-red-600 bg-red-100 px-2 py-1 rounded-full self-start" itemprop="genre">${article.category}</span>
+                            <h1 class="text-3xl md:text-4xl font-headline text-gray-900 mt-2 mb-3" itemprop="headline">${article.headline}</h1>
+                            <p class="text-gray-500 text-sm mb-4">
+                                <i class="far fa-clock"></i> <time itemprop="datePublished" datetime="${article.publishedAt}">${new Date(article.publishedAt).toLocaleString('hi-IN', { dateStyle: 'long', timeStyle: 'short' })}</time>
+                                <span class="mx-2">|</span>
+                                <span><i class="far fa-eye"></i> ${article.readTime} मिनट पढ़ें</span>
+                            </p>
+                            <p class="text-gray-700 mb-6 text-base" itemprop="description">${article.description}</p>
+                            <div class="flex justify-between items-center">
+                                <a href="#" class="font-bold text-red-600 hover:underline">पूरी खबर पढ़ें &rarr;</a>
+                                <div class="flex items-center space-x-3">
+                                    <button title="Listen to article" class="text-gray-600 hover:text-red-600"><i class="fas fa-volume-up"></i></button>
+                                    <button title="Bookmark" class="text-gray-600 hover:text-red-600"><i class="far fa-bookmark"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                        <img src="${article.imageUrl}" alt="${article.headline}" class="w-full h-full object-cover" itemprop="image">
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderFeaturedGrid(articles) {
+            const gridContainer = document.getElementById('featured-grid-container');
+            gridContainer.innerHTML = articles.map(article => `
+                <div class="bg-white rounded-lg shadow-md overflow-hidden transform hover:-translate-y-1.5 transition-transform duration-300 group">
+                    <img src="${article.imageUrl}" alt="${article.headline}" class="w-full h-44 object-cover">
+                    <div class="p-4">
+                        <h3 class="font-headline text-lg mb-2 h-20 text-gray-800 group-hover:text-accent-gradient">${article.headline}</h3>
+                        <p class="text-gray-500 text-xs"><i class="far fa-clock"></i> ${new Date(article.publishedAt).toLocaleString('hi-IN', { dateStyle: 'long' })}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderCategorySection(title, articles, containerSelector) {
+            const listContainer = document.querySelector(containerSelector);
+            listContainer.innerHTML = articles.map((article, index) => `
+                <li class="${index < articles.length - 1 ? 'border-b border-gray-200 pb-3' : ''}">
+                    <a href="#" class="font-semibold text-gray-800 hover:text-red-600">${article.headline}</a>
+                </li>
+            `).join('');
+        }
+
+        function renderEditorsPick(article) {
+            const container = document.getElementById('editor-pick-section');
+            container.innerHTML += `
+                <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                    <img src="${article.imageUrl}" alt="${article.headline}" class="w-full h-44 object-cover">
+                    <div class="p-4">
+                        <h3 class="font-headline text-lg mb-2 text-gray-800">${article.headline}</h3>
+                    </div>
+                </div>
+            `;
+        }
+
+        // =================================================================
+        // UTILITY AND UI LOGIC
+        // =================================================================
+        
+        // Dark Mode Toggle Logic
+        const darkModeToggle = document.getElementById('dark-mode-toggle');
+        const htmlElement = document.documentElement;
+
+        if (localStorage.getItem('theme') === 'dark') {
+            htmlElement.classList.add('dark');
+            darkModeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+        }
+
+        darkModeToggle.addEventListener('click', () => {
+            htmlElement.classList.toggle('dark');
+            if (htmlElement.classList.contains('dark')) {
+                localStorage.setItem('theme', 'dark');
+                darkModeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+            } else {
+                localStorage.setItem('theme', 'light');
+                darkModeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+            }
+        });
+
+        // Breaking News Ticker Logic
+        let breakingNewsItems = [];
+        let currentNewsIndex = 0;
+        const breakingNewsElement = document.getElementById('breaking-news-content');
+        
+        function setupBreakingNewsTicker(newsHeadlines) {
+            breakingNewsItems = newsHeadlines;
+            if(breakingNewsItems.length > 0) {
+                breakingNewsElement.textContent = breakingNewsItems[0];
+                setInterval(updateBreakingNews, 5000);
+            }
+        }
+
+        function updateBreakingNews() {
+            currentNewsIndex = (currentNewsIndex + 1) % breakingNewsItems.length;
+            breakingNewsElement.style.animation = 'none';
+            void breakingNewsElement.offsetWidth;
+            breakingNewsElement.style.animation = 'fadeIn 1s ease-in-out';
+            breakingNewsElement.textContent = breakingNewsItems[currentNewsIndex];
+        }
+
+        // Popup Logic
+        const popupOverlay = document.getElementById('popup-overlay');
+        const popupCloseBtn = document.getElementById('popup-close');
+        const popupForm = document.getElementById('popup-form');
+
+        const showPopup = () => {
+            if (!sessionStorage.getItem('popupShown')) {
+                popupOverlay.classList.add('active');
+                sessionStorage.setItem('popupShown', 'true');
+            }
+        };
+
+        const closePopup = () => {
+            popupOverlay.classList.remove('active');
+        };
+
+        setTimeout(showPopup, 10000);
+        popupCloseBtn.addEventListener('click', closePopup);
+        popupOverlay.addEventListener('click', (e) => {
+            if (e.target === popupOverlay) closePopup();
+        });
+        popupForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            console.log('Form submitted!');
+            closePopup();
+        });
+
+    </script>
+
+</body>
+</html>
