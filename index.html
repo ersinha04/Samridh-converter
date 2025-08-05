@@ -78,6 +78,7 @@
             font-size: 16px;
             cursor: pointer;
             padding: 10px;
+            z-index: 100;
         }
 
         .toggle-container input[type="checkbox"] {
@@ -118,7 +119,7 @@
         .samridh-ai {
             margin-top: 80px;
             padding: 40px;
-            background: linear-gradient(15deg, #f77e5f, #eb47b);
+            background: linear-gradient(135deg, #ff7e5f, #feb47b);
             border-radius: 25px;
             width: 80%;
             max-width: 555px;
@@ -161,6 +162,55 @@
             color: #fff;
             transform: scale(1.1);
         }
+        
+        /* NEW: Samridh Bharat Section */
+        .samridh-bharat {
+            margin-top: 80px;
+            padding: 40px;
+            background: linear-gradient(135deg, #2E8B57, #20B2AA);
+            border-radius: 25px;
+            width: 80%;
+            max-width: 555px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            transition: transform 0.3s ease-in-out, background 0.5s ease;
+        }
+
+        .samridh-bharat:hover {
+            transform: scale(1.05);
+            background: linear-gradient(135deg, #3CB371, #2E8B57);
+        }
+
+        .samridh-bharat h2 {
+            font-size: 36px;
+            color: #fff;
+            margin-bottom: 15px;
+        }
+
+        .samridh-bharat p {
+            font-size: 18px;
+            color: #fff;
+            margin-bottom: 25px;
+        }
+
+        .samridh-bharat a {
+            display: inline-block;
+            padding: 12px 30px;
+            background: #fff;
+            color: #2E8B57;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 30px;
+            transition: background 0.3s, transform 0.3s;
+            border: 2px solid #2E8B57;
+        }
+
+        .samridh-bharat a:hover {
+            background: #2E8B57;
+            color: #fff;
+            transform: scale(1.1);
+        }
+
 
         /* Tools Section */
         .tools-container {
@@ -253,7 +303,7 @@
         <span>🌙</span>
         <input type="checkbox" id="darkModeToggle" onchange="toggleDarkMode()">
         <label for="darkModeToggle"></label>
-        <span></span>
+        <span>☀️</span>
     </div>
 
     <div class="hero">
@@ -266,6 +316,13 @@
         <h2>Meet Samridh AI</h2>
         <p>Experience AI-powered image processing with smart optimization and instant results.</p>
         <a href="samridh.html" target="_blank">Explore AI Features</a>
+    </div>
+    
+    <!-- NEW SECTION ADDED HERE -->
+    <div class="samridh-bharat">
+        <h2>Explore Samridh Bharat</h2>
+        <p>Stay updated with the latest news and insights from across the nation on our news platform.</p>
+        <a href="#" target="_blank">Visit Samridh Bharat</a>
     </div>
 
     <div class="tools-container">
@@ -302,10 +359,13 @@
 
         // Check the saved theme preference and apply it on page load
         window.onload = function() {
-            if (localStorage.getItem('theme') === 'light') {
-                document.body.classList.add('light-mode'); // Add the light-mode class if saved in localStorage
+            const theme = localStorage.getItem('theme');
+            if (theme === 'light') {
+                document.body.classList.add('light-mode');
+                document.getElementById('darkModeToggle').checked = true;
             } else {
-                document.body.classList.remove('light-mode'); // Otherwise, ensure dark mode is active
+                document.body.classList.remove('light-mode');
+                document.getElementById('darkModeToggle').checked = false;
             }
         }
     </script>
