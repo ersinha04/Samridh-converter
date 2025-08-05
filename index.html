@@ -14,7 +14,22 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap');
 
-        /* General Body Styling */
+        /* Keyframes for the background animation */
+        @keyframes gradientAnimation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* CSS Variables for scroll-based color change */
+        :root {
+            --color-1: #001f3f;
+            --color-2: #0a1a2b;
+            --color-3: #0074D9;
+            --color-4: #001f3f;
+        }
+
+        /* General Body Styling with Animated Gradient */
         body {
             font-family: 'Poppins', sans-serif;
             margin: 0;
@@ -24,31 +39,44 @@
             align-items: center;
             justify-content: flex-start;
             min-height: 100vh;
-            background: linear-gradient(135deg, #001f3f, #0074D9);
+            background: linear-gradient(135deg, var(--color-1), var(--color-2), var(--color-3), var(--color-4));
+            background-size: 400% 400%;
+            animation: gradientAnimation 20s ease infinite;
             color: #fff;
             text-align: center;
-            transition: background 0.5s ease-in-out, color 0.5s ease-in-out;
+            transition: color 0.5s ease-in-out;
             overflow-x: hidden;
-            scroll-behavior: smooth; /* Smooth scrolling */
+            scroll-behavior: smooth;
         }
 
-        /* Light Mode Styling */
+        /* Light Mode Styling with Animated Gradient */
         .light-mode {
-            background: linear-gradient(135deg, #ADD8E6, #87CEFA);
-            color: #000;
+            color: #001f3f;
+        }
+        .light-mode .section-card, .light-mode .testimonial-card, .light-mode .faq-item, .light-mode .blog-card, .light-mode .comparison-table {
+            background: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .light-mode footer {
+            background-color: #0074D9;
+        }
+        .light-mode .copyright-footer {
+            background-color: #0056b3;
         }
 
         /* Hero Section */
         .hero {
             padding: 60px 20px;
             margin-top: 30px;
-            animation: fadeIn 1.2s ease-in-out;
         }
 
         h1 {
             font-size: 48px;
             font-weight: 700;
             text-shadow: 4px 4px 12px rgba(0, 0, 0, 0.6);
+        }
+        .light-mode h1 {
+             text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
         }
 
         .btn {
@@ -81,10 +109,7 @@
             z-index: 100;
         }
 
-        .toggle-container input[type="checkbox"] {
-            display: none;
-        }
-
+        .toggle-container input[type="checkbox"] { display: none; }
         .toggle-container label {
             position: relative;
             width: 60px;
@@ -94,7 +119,6 @@
             cursor: pointer;
             transition: background-color 0.3s ease;
         }
-
         .toggle-container label:before {
             content: "";
             position: absolute;
@@ -106,20 +130,30 @@
             left: 2px;
             transition: transform 0.3s ease;
         }
+        .toggle-container input[type="checkbox"]:checked + label { background-color: #4caf50; }
+        .toggle-container input[type="checkbox"]:checked + label:before { transform: translateX(30px); }
 
-        .toggle-container input[type="checkbox"]:checked + label {
-            background-color: #4caf50;
-        }
-
-        .toggle-container input[type="checkbox"]:checked + label:before {
-            transform: translateX(30px);
-        }
-
-        /* AI Section */
-        .samridh-ai {
+        /* General Section Styling */
+        .section {
+            width: 90%;
+            max-width: 1200px;
             margin-top: 80px;
+            padding: 40px 20px;
+        }
+        .section-title {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 40px;
+        }
+        .section-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 20px;
+        }
+
+        /* Promo Boxes */
+        .promo-box {
             padding: 40px;
-            background: linear-gradient(135deg, #ff7e5f, #feb47b);
             border-radius: 25px;
             width: 80%;
             max-width: 555px;
@@ -127,114 +161,157 @@
             text-align: center;
             transition: transform 0.3s ease-in-out, background 0.5s ease;
         }
-
-        .samridh-ai:hover {
-            transform: scale(1.05);
-            background: linear-gradient(135deg, #ff6a3d, #ffb14e);
-        }
-
-        .samridh-ai h2 {
-            font-size: 36px;
-            color: #fff;
-            margin-bottom: 15px;
-        }
-
-        .samridh-ai p {
-            font-size: 18px;
-            color: #fff;
-            margin-bottom: 25px;
-        }
-
-        .samridh-ai a {
+        .promo-box:hover { transform: scale(1.05); }
+        .promo-box h2 { font-size: 36px; color: #fff; margin-bottom: 15px; }
+        .promo-box p { font-size: 18px; color: #fff; margin-bottom: 25px; }
+        .promo-box a {
             display: inline-block;
             padding: 12px 30px;
             background: #fff;
-            color: #ff7e5f;
             text-decoration: none;
             font-weight: bold;
             border-radius: 30px;
             transition: background 0.3s, transform 0.3s;
-            border: 2px solid #ff7e5f;
         }
+        .promo-box a:hover { color: #fff; transform: scale(1.1); }
 
-        .samridh-ai a:hover {
-            background: #ff7e5f;
-            color: #fff;
-            transform: scale(1.1);
-        }
-        
-        /* NEW: Samridh Bharat Section */
-        .samridh-bharat {
-            margin-top: 80px;
-            padding: 40px;
-            background: linear-gradient(135deg, #2E8B57, #20B2AA);
-            border-radius: 25px;
-            width: 80%;
-            max-width: 555px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            text-align: center;
-            transition: transform 0.3s ease-in-out, background 0.5s ease;
-        }
+        .samridh-ai { margin-top: 80px; background: linear-gradient(135deg, #ff7e5f, #feb47b); }
+        .samridh-ai a { color: #ff7e5f; border: 2px solid #ff7e5f; }
+        .samridh-ai a:hover { background: #ff7e5f; }
 
-        .samridh-bharat:hover {
-            transform: scale(1.05);
-            background: linear-gradient(135deg, #3CB371, #2E8B57);
-        }
+        .samridh-bharat { margin-top: 80px; background: linear-gradient(135deg, #2E8B57, #20B2AA); }
+        .samridh-bharat a { color: #2E8B57; border: 2px solid #2E8B57; }
+        .samridh-bharat a:hover { background: #2E8B57; }
 
-        .samridh-bharat h2 {
-            font-size: 36px;
-            color: #fff;
-            margin-bottom: 15px;
-        }
-
-        .samridh-bharat p {
-            font-size: 18px;
-            color: #fff;
-            margin-bottom: 25px;
-        }
-
-        .samridh-bharat a {
-            display: inline-block;
-            padding: 12px 30px;
-            background: #fff;
-            color: #2E8B57;
-            text-decoration: none;
-            font-weight: bold;
-            border-radius: 30px;
-            transition: background 0.3s, transform 0.3s;
-            border: 2px solid #2E8B57;
-        }
-
-        .samridh-bharat a:hover {
-            background: #2E8B57;
-            color: #fff;
-            transform: scale(1.1);
-        }
-
-
-        /* Tools Section */
-        .tools-container {
-            margin-top: 80px;
+        /* Stats Counter Section */
+        .stats-container {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 20px;
-            padding-bottom: 40px;
+            gap: 40px;
+        }
+        .stat-item { text-align: center; }
+        .stat-item i { font-size: 48px; margin-bottom: 10px; color: #87CEFA; }
+        .stat-number { font-size: 42px; font-weight: 700; }
+        .stat-label { font-size: 16px; }
+
+        /* Before & After Slider */
+        .comparison-slider {
+            position: relative;
+            width: 100%;
+            max-width: 700px;
+            margin: 0 auto;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        .comparison-slider img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        .comparison-slider .image-after {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+            clip-path: polygon(50% 0, 100% 0, 100% 100%, 50% 100%);
+        }
+        .comparison-slider .slider-handle {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 4px;
+            height: 100%;
+            background: #fff;
+            cursor: ew-resize;
+            transform: translateX(-50%);
+        }
+        .comparison-slider .slider-handle::after {
+            content: "\f337"; /* Font Awesome left-right arrows */
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #fff;
+            color: #0074D9;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .comparison-slider input[type=range] {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            opacity: 0;
+            cursor: ew-resize;
         }
 
-        .tool-box {
-            background: rgba(255, 255, 255, 0.2);
+        /* Use Cases, Blog, Privacy, API Sections */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        .grid-card {
             padding: 20px;
             border-radius: 15px;
-            width: 200px;
-            text-align: center;
-            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
-            transition: transform 0.3s ease-in-out;
+            transition: transform 0.3s;
+        }
+        .grid-card:hover { transform: translateY(-10px); }
+        .grid-card i { font-size: 36px; margin-bottom: 15px; color: #ff7e5f; }
+        .blog-card img { width: 100%; border-radius: 10px; margin-bottom: 15px; }
+        .blog-card h3 { margin-bottom: 10px; }
+        .blog-card a { color: #ff7e5f; text-decoration: none; font-weight: bold; }
+
+        /* Comparison Table */
+        .comparison-table {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            border-collapse: collapse;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+        .comparison-table th, .comparison-table td {
+            padding: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .light-mode .comparison-table th, .light-mode .comparison-table td {
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        .comparison-table th {
+            background: rgba(0,0,0,0.2);
+            font-weight: bold;
+        }
+        .comparison-table td .fa-check-circle { color: #2E8B57; }
+        .comparison-table td .fa-times-circle { color: #ff7e5f; }
+
+        /* API Section */
+        .api-section .code-block {
+            background: #0a1a2b;
+            color: #b2ebf2;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: left;
+            font-family: 'Courier New', Courier, monospace;
+            white-space: pre-wrap;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        .light-mode .api-section .code-block {
+            background: #001f3f;
         }
 
-        .tool-box:hover {
-            transform: scale(1.05);
-        }
 
         /* Footer Styling */
         footer {
@@ -246,47 +323,13 @@
             font-size: 14px;
             margin-top: 50px;
         }
-
-        footer a {
-            color: #ff7e5f;
-            text-decoration: none;
-        }
-
-        footer a:hover {
-            text-decoration: underline;
-        }
-
-        /* Footer Links */
-        .footer-links {
-            display: flex;
-            justify-content: center;
-            gap: 40px;
-            margin-bottom: 20px;
-        }
-
-        .footer-links a {
-            font-size: 16px;
-        }
-
-        /* Social Icons */
-        .social-icons {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-top: 20px;
-        }
-
-        .social-icons a {
-            font-size: 28px;
-            color: white;
-            transition: color 0.3s ease;
-        }
-
-        .social-icons a:hover {
-            color: #ff7e5f;
-        }
-
-        /* Copyright Footer */
+        footer a { color: #ff7e5f; text-decoration: none; }
+        footer a:hover { text-decoration: underline; }
+        .footer-links { display: flex; justify-content: center; gap: 40px; margin-bottom: 20px; }
+        .footer-links a { font-size: 16px; }
+        .social-icons { display: flex; justify-content: center; gap: 20px; margin-top: 20px; }
+        .social-icons a { font-size: 28px; color: white; transition: color 0.3s ease; }
+        .social-icons a:hover { color: #ff7e5f; }
         .copyright-footer {
             background-color: #0a1a2b;
             color: white;
@@ -294,6 +337,18 @@
             padding: 15px 0;
             text-align: center;
             width: 100%;
+        }
+
+        /* Scroll Animation Classes */
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        .animate-on-scroll.is-visible {
+            opacity: 1;
+            transform: translateY(0);
         }
     </style>
 </head>
@@ -306,31 +361,172 @@
         <span>☀️</span>
     </div>
 
-    <div class="hero">
+    <div class="hero animate-on-scroll">
         <h1>Welcome to Samridh Technology</h1>
         <p>Resize, convert, and optimize your images with ease using our advanced online tool.</p>
-        <a href="/Samridh-converter/img-compress.html" class="btn" target="_blank" rel="noopener noreferrer">Get Started</a>
+        <a href="samridh_bharat.html" class="btn" target="_blank" rel="noopener noreferrer">Get Started</a>
     </div>
 
-    <div class="samridh-ai">
+    <div class="promo-box samridh-ai animate-on-scroll">
         <h2>Meet Samridh AI</h2>
         <p>Experience AI-powered image processing with smart optimization and instant results.</p>
         <a href="samridh.html" target="_blank">Explore AI Features</a>
     </div>
     
-    <!-- LINK UPDATED HERE -->
-    <div class="samridh-bharat">
+    <div class="promo-box samridh-bharat animate-on-scroll">
         <h2>Explore Samridh Bharat</h2>
         <p>Stay updated with the latest news and insights from across the nation on our news platform.</p>
-        <!-- This link now points to a local file named 'samridh_bharat.html' -->
         <a href="samridh_bharat.html" target="_blank">Visit Samridh Bharat</a>
     </div>
 
-    <div class="tools-container">
-        <div class="tool-box"><h3>Image Resizer</h3><p>Resize images without losing quality.</p></div>
-        <div class="tool-box"><h3>Image Converter</h3><p>Convert images between different formats.</p></div>
-        <div class="tool-box"><h3>Image Compressor</h3><p>Compress images while maintaining quality.</p></div>
-        <div class="tool-box"><h3>Background Remover</h3><p>Remove image backgrounds with AI.</p></div>
+    <!-- Live Stats Section -->
+    <div class="section animate-on-scroll">
+        <div class="stats-container section-card">
+            <div class="stat-item">
+                <i class="fas fa-image"></i>
+                <div class="stat-number" data-target="1450">0</div>
+                <div class="stat-label">Images Processed Today</div>
+            </div>
+            <div class="stat-item">
+                <i class="fas fa-database"></i>
+                <div class="stat-number" data-target="5">0</div>
+                <div class="stat-label">GB of Data Saved</div>
+            </div>
+            <div class="stat-item">
+                <i class="fas fa-users"></i>
+                <div class="stat-number" data-target="8920">0</div>
+                <div class="stat-label">Happy Users</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Before & After Slider Section -->
+    <div class="section animate-on-scroll">
+        <h2 class="section-title">See The Quality For Yourself</h2>
+        <div class="comparison-slider">
+            <img src="https://placehold.co/800x450/333/fff?text=Original+Image+(5MB)" alt="Original Image" class="image-before">
+            <img src="https://placehold.co/800x450/555/fff?text=Compressed+Image+(500KB)" alt="Compressed Image" class="image-after">
+            <div class="slider-handle"></div>
+            <input type="range" min="0" max="100" value="50" class="slider-input">
+        </div>
+    </div>
+
+    <!-- Use Cases Section -->
+    <div class="section animate-on-scroll">
+        <h2 class="section-title">Who Is It For?</h2>
+        <div class="grid-container">
+            <div class="grid-card section-card use-case-card">
+                <i class="fas fa-feather-alt"></i>
+                <h3>Bloggers & Writers</h3>
+                <p>Optimize images to make your website load faster and improve SEO.</p>
+            </div>
+            <div class="grid-card section-card use-case-card">
+                <i class="fas fa-graduation-cap"></i>
+                <h3>Students</h3>
+                <p>Reduce the size of images for your presentations and assignments.</p>
+            </div>
+            <div class="grid-card section-card use-case-card">
+                <i class="fas fa-code"></i>
+                <h3>Developers</h3>
+                <p>Compress images for web apps to enhance performance and user experience.</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Privacy Promise Section -->
+    <div class="section animate-on-scroll">
+        <h2 class="section-title">Our Privacy Promise</h2>
+        <div class="grid-container">
+             <div class="grid-card section-card use-case-card">
+                <i class="fas fa-user-secret"></i>
+                <h3>Your Privacy First</h3>
+                <p>We do not store, share, or look at your images. Your privacy is our top priority.</p>
+            </div>
+             <div class="grid-card section-card use-case-card">
+                <i class="fas fa-trash-alt"></i>
+                <h3>Automatic Deletion</h3>
+                <p>All your uploaded files are automatically and permanently deleted after 1 hour.</p>
+            </div>
+             <div class="grid-card section-card use-case-card">
+                <i class="fas fa-lock"></i>
+                <h3>Secure Connection</h3>
+                <p>We use secure SSL (HTTPS) encryption to protect your files during transfer.</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Comparison Section -->
+    <div class="section animate-on-scroll">
+        <h2 class="section-title">Compare Us</h2>
+        <table class="comparison-table section-card">
+            <thead>
+                <tr>
+                    <th>Feature</th>
+                    <th>Samridh Converter</th>
+                    <th>Other Online Tools</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Watermarks</td>
+                    <td><i class="fas fa-check-circle"></i> No</td>
+                    <td><i class="fas fa-times-circle"></i> Often Yes</td>
+                </tr>
+                <tr>
+                    <td>Speed</td>
+                    <td><i class="fas fa-check-circle"></i> Super Fast</td>
+                    <td><i class="fas fa-times-circle"></i> Slow</td>
+                </tr>
+                <tr>
+                    <td>Security (Auto-Delete)</td>
+                    <td><i class="fas fa-check-circle"></i> Yes (1 Hour)</td>
+                    <td><i class="fas fa-times-circle"></i> Unclear</td>
+                </tr>
+                <tr>
+                    <td>Price</td>
+                    <td><i class="fas fa-check-circle"></i> 100% Free</td>
+                    <td><i class="fas fa-times-circle"></i> Hidden Fees</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- API Section -->
+    <div class="section animate-on-scroll api-section">
+        <h2 class="section-title">For Developers</h2>
+        <p style="max-width: 700px; margin: 0 auto 30px;">Integrate our powerful image processing engine into your applications with our simple API.</p>
+        <div class="code-block">
+            <code>
+                <span style="color: #8E2DE2;">fetch</span>(<span style="color: #ffb14e;">'https://api.samridh.tech/v1/optimize'</span>, {<br>
+                &nbsp;&nbsp;<span style="color: #4A00E0;">method</span>: <span style="color: #ffb14e;">'POST'</span>,<br>
+                &nbsp;&nbsp;<span style="color: #4A00E0;">headers</span>: { <span style="color: #ffb14e;">'Authorization'</span>: <span style="color: #ffb14e;">'Bearer YOUR_API_KEY'</span> },<br>
+                &nbsp;&nbsp;<span style="color: #4A00E0;">body</span>: formData<br>
+                });
+            </code>
+        </div>
+    </div>
+
+
+    <!-- Blog Section -->
+    <div class="section animate-on-scroll">
+        <h2 class="section-title">From Our Blog</h2>
+        <div class="grid-container">
+            <div class="blog-card section-card">
+                <img src="https://placehold.co/400x200/ff7e5f/fff?text=Blog+Post" alt="Blog Post">
+                <h3>Why Image Optimization is Crucial for Your Website's Speed</h3>
+                <a href="#">Read More &rarr;</a>
+            </div>
+            <div class="blog-card section-card">
+                <img src="https://placehold.co/400x200/2E8B57/fff?text=Blog+Post" alt="Blog Post">
+                <h3>JPEG vs PNG vs WEBP: Which Format is Best?</h3>
+                <a href="#">Read More &rarr;</a>
+            </div>
+            <div class="blog-card section-card">
+                <img src="https://placehold.co/400x200/0074D9/fff?text=Blog+Post" alt="Blog Post">
+                <h3>5 Common Mistakes in Image Resizing and How to Avoid Them</h3>
+                <a href="#">Read More &rarr;</a>
+            </div>
+        </div>
     </div>
 
     <footer>
@@ -346,7 +542,6 @@
         <p>Developed by ER</p>
     </footer>
 
-    <!-- Copyright Footer -->
     <div class="copyright-footer">
         <p>&copy; 2025 Samridh technologies. All rights reserved.</p>
     </div>
@@ -354,8 +549,9 @@
     <script>
         // Function to toggle dark mode
         function toggleDarkMode() {
-            document.body.classList.toggle('light-mode');  // Toggle the light-mode class on the body
-            localStorage.setItem('theme', document.body.classList.contains('light-mode') ? 'light' : 'dark'); // Save the preference to localStorage
+            document.body.classList.toggle('light-mode');
+            localStorage.setItem('theme', document.body.classList.contains('light-mode') ? 'light' : 'dark');
+            handleScroll(); 
         }
 
         // Check the saved theme preference and apply it on page load
@@ -368,7 +564,106 @@
                 document.body.classList.remove('light-mode');
                 document.getElementById('darkModeToggle').checked = false;
             }
+            handleScroll();
         }
+
+        // Scroll Animation for sections
+        const animatedElements = document.querySelectorAll('.animate-on-scroll');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    
+                    // Trigger counter animation if it's the stats section
+                    const counters = entry.target.querySelectorAll('.stat-number');
+                    if (counters.length > 0) {
+                        counters.forEach(counter => {
+                            animateCounter(counter);
+                        });
+                    }
+
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+
+        animatedElements.forEach(element => {
+            observer.observe(element);
+        });
+
+        // Stats Counter Animation
+        function animateCounter(element) {
+            const target = +element.getAttribute('data-target');
+            const duration = 2000; // 2 seconds
+            const stepTime = 20;
+            const steps = duration / stepTime;
+            const increment = target / steps;
+            let current = 0;
+
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    clearInterval(timer);
+                    element.innerText = target.toLocaleString();
+                } else {
+                    element.innerText = Math.ceil(current).toLocaleString();
+                }
+            }, stepTime);
+        }
+
+        // Before & After Slider Logic
+        const sliderInput = document.querySelector('.slider-input');
+        const imageAfter = document.querySelector('.image-after');
+        const sliderHandle = document.querySelector('.slider-handle');
+
+        sliderInput.addEventListener('input', (e) => {
+            const value = e.target.value;
+            imageAfter.style.clipPath = `polygon(${value}% 0, 100% 0, 100% 100%, ${value}% 100%)`;
+            sliderHandle.style.left = `${value}%`;
+        });
+
+        // Scroll-based background color animation
+        const root = document.documentElement;
+        const darkColors = { c1: '#001f3f', c2: '#0a1a2b', c3: '#0074D9', c4: '#001f3f' };
+        const lightColors = { c1: '#e0f7fa', c2: '#b2ebf2', c3: '#87CEFA', c4: '#e0f7fa' };
+        const midDarkColors = { c1: '#0a1a2b', c2: '#004d40', c3: '#00796b', c4: '#0a1a2b' };
+        const midLightColors = { c1: '#b2ebf2', c2: '#a7ffeb', c3: '#64ffda', c4: '#b2ebf2' };
+
+        function interpolateColor(color1, color2, factor) {
+            let result = color1.slice();
+            for (let i = 0; i < 3; i++) {
+                result[i] = Math.round(result[i] + factor * (color2[i] - result[i]));
+            }
+            return `rgb(${result[0]}, ${result[1]}, ${result[2]})`;
+        }
+
+        function hexToRgb(hex) {
+            let r = 0, g = 0, b = 0;
+            if (hex.length == 4) { r = "0x" + hex[1] + hex[1]; g = "0x" + hex[2] + hex[2]; b = "0x" + hex[3] + hex[3]; }
+            else if (hex.length == 7) { r = "0x" + hex[1] + hex[2]; g = "0x" + hex[3] + hex[4]; b = "0x" + hex[5] + hex[6]; }
+            return [+r, +g, +b];
+        }
+
+        function handleScroll() {
+            const scrollTotal = root.scrollHeight - root.clientHeight;
+            if (scrollTotal <= 0) return; // Prevent division by zero
+            const scrollPercent = Math.min(root.scrollTop / scrollTotal, 1);
+            
+            const isLight = document.body.classList.contains('light-mode');
+            const startPalette = isLight ? lightColors : darkColors;
+            const endPalette = isLight ? midLightColors : midDarkColors;
+
+            const c1_start = hexToRgb(startPalette.c1); const c2_start = hexToRgb(startPalette.c2); const c3_start = hexToRgb(startPalette.c3); const c4_start = hexToRgb(startPalette.c4);
+            const c1_end = hexToRgb(endPalette.c1); const c2_end = hexToRgb(endPalette.c2); const c3_end = hexToRgb(endPalette.c3); const c4_end = hexToRgb(endPalette.c4);
+
+            root.style.setProperty('--color-1', interpolateColor(c1_start, c1_end, scrollPercent));
+            root.style.setProperty('--color-2', interpolateColor(c2_start, c2_end, scrollPercent));
+            root.style.setProperty('--color-3', interpolateColor(c3_start, c3_end, scrollPercent));
+            root.style.setProperty('--color-4', interpolateColor(c4_start, c4_end, scrollPercent));
+        }
+
+        window.addEventListener('scroll', handleScroll);
+
     </script>
 </body>
 </html>
