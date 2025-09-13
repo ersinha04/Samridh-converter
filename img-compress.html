@@ -1,270 +1,250 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Samridh Converter - Auto Image Resizer</title>
-  <style>
-    body {
-      font-family: 'Montserrat', sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
-      margin: 0;
-      background: linear-gradient(135deg, #2f2f2f, #1a237e);
-      color: #e1e1e1;
-      padding: 20px;
-    }
-    .container {
-      background-color: rgba(15, 15, 15, 0.7);
-      padding: 60px;
-      border-radius: 40px;
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7);
-      text-align: center;
-      width: 500px;
-      backdrop-filter: blur(25px);
-      border: 2px solid rgba(255, 255, 255, 0.1);
-      animation: fadeInScale 0.8s ease-out;
-      position: relative;
-    }
-    @keyframes fadeInScale {
-      from { opacity: 0; transform: scale(0.9); }
-      to { opacity: 1; transform: scale(1); }
-    }
-    h1 {
-      color: #e7856e;
-      margin-bottom: 50px;
-      font-size: 38px;
-      font-weight: 700;
-      text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.6);
-    }
-    .input-group {
-      margin-bottom: 40px;
-    }
-    label {
-      display: block;
-      margin-bottom: 12px;
-      font-weight: 600;
-      color: #ccc;
-    }
-    input[type="file"], input[type="number"] {
-      padding: 15px;
-      border: 1px solid rgba(255, 255, 0, 0.3);
-      border-radius: 10px;
-      width: calc(100% - 30px);
-      background-color: rgba(0, 0, 0, 0.5);
-      color: #fff;
-      box-sizing: border-box;
-    }
-    input[type="number"] {
-      width: 120px;
-      display: inline-block;
-      margin: 8px;
-    }
-    select {
-      padding: 15px;
-      margin-top: 20px;
-      width: 200px;
-      border-radius: 10px;
-      background-color: rgba(0, 0, 0, 0.5);
-      color: #fff;
-      border: 1px solid rgba(255, 255, 255, 0.3);
-    }
-    button {
-      background-color: #00bcd4;
-      color: white;
-      padding: 20px 50px;
-      border: none;
-      border-radius: 50px;
-      cursor: pointer;
-      font-size: 22px;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
-    }
-    button:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
-    }
-    #drop-zone {
-      border: 2px dashed #aaa;
-      padding: 30px;
-      border-radius: 20px;
-      margin-bottom: 20px;
-      color: #bbb;
-      background-color: rgba(0,0,0,0.2);
-    }
-    #drop-zone.dragover {
-      background-color: rgba(0, 255, 255, 0.2);
-      border-color: #00bcd4;
-      color: #fff;
-    }
-    #result-container {
-      margin-top: 40px;
-      display: none;
-    }
-    #result-image {
-      max-width: 100%;
-      border-radius: 12px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
-      margin-bottom: 25px;
-    }
-    #download-button {
-      display: none;
-      margin-top: 25px;
-      background-color: #1e88e5;
-      color: white;
-      padding: 15px 30px;
-      border: none;
-      border-radius: 25px;
-      font-size: 18px;
-      cursor: pointer;
-    }
-    footer {
-      text-align: center;
-      padding: 20px 0;
-      color: #ccc;
-      font-size: 14px;
-      width: 100%;
-    }
-  </style>
-</head>
-<body>
-  <div class="container" ondrop="handleDrop(event)" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)">
-    <h1>Samridh Converter - Auto Image Resizer</h1>
-    <div id="drop-zone">📥 Drag & Drop or Paste Image Here</div>
-    <div class="input-group">
-      <label for="image-input">Or Select Image:</label>
-      <input type="file" id="image-input" accept="image/*" />
-    </div>
-    <div class="input-group">
-      <label>Dimensions:</label>
-      <input type="number" id="width" placeholder="Width" value="1200" />
-      <input type="number" id="height" placeholder="Height" value="720" />
-    </div>
-    <div class="input-group">
-      <label for="format-select">Select Format:</label>
-      <select id="format-select">
-        <option value="image/jpeg">JPEG</option>
-        <option value="image/webp">WEBP</option>
-      </select>
-    </div>
-    <button id="resize-button">Resize Image &lt; 50KB</button>
+import React, { useRef, useState, useEffect } from 'react';
 
-    <div id="result-container">
-      <img id="result-image" src="" alt="Resized Image" />
-      <button id="download-button" onclick="downloadImage()">Download Image</button>
-    </div>
-  </div>
+// Samridh Image Resizer - Single-file React component
+// TailwindCSS utility classes are used for styling (no external CSS here)
+// Features: drag & drop upload, preview, automatic 1200x720 default frame,
+// manual width/height, lock aspect ratio, format select, quality slider, download.
 
-  <footer>
-    <p>Welcome to Samridh Jharkhand. A new age digital media by SMPL.</p>
-    <p>&copy; 2025 Samridh Converter. All rights reserved.</p>
-  </footer>
+export default function SamridhImageResizer() {
+  const DEFAULT_W = 1200;
+  const DEFAULT_H = 720;
 
-  <script>
-    const resizeButton = document.getElementById('resize-button');
-    const imageInput = document.getElementById('image-input');
-    const widthInput = document.getElementById('width');
-    const heightInput = document.getElementById('height');
-    const formatSelect = document.getElementById('format-select');
-    const resultContainer = document.getElementById('result-container');
-    const resultImage = document.getElementById('result-image');
-    const downloadButton = document.getElementById('download-button');
-    const dropZone = document.getElementById('drop-zone');
+  const fileInputRef = useRef(null);
+  const canvasRef = useRef(null);
+  const [file, setFile] = useState(null);
+  const [image, setImage] = useState(null);
+  const [width, setWidth] = useState(DEFAULT_W);
+  const [height, setHeight] = useState(DEFAULT_H);
+  const [keepAspect, setKeepAspect] = useState(true);
+  const [format, setFormat] = useState('image/jpeg');
+  const [quality, setQuality] = useState(0.9);
+  const [dragging, setDragging] = useState(false);
+  const [message, setMessage] = useState('Drop an image or click Upload');
 
-    let currentFile = null;
+  useEffect(() => {
+    if (!file) return;
+    const img = new Image();
+    img.onload = () => setImage(img);
+    img.onerror = () => setMessage('Failed to load image');
+    img.src = URL.createObjectURL(file);
+    return () => URL.revokeObjectURL(img.src);
+  }, [file]);
 
-    // Drag & Drop support
-    function handleDragOver(e) {
-      e.preventDefault();
-      dropZone.classList.add('dragover');
+  // Keep aspect when user changes width/height
+  useEffect(() => {
+    if (!image || !keepAspect) return;
+    const ratio = image.width / image.height;
+    // If width changed recently, derive height; if height changed, derive width.
+    // We'll naively prefer width as controlling if both equal default.
+    setHeight(Math.round(width / ratio));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [width]);
+
+  useEffect(() => {
+    if (!image || !keepAspect) return;
+    const ratio = image.width / image.height;
+    setWidth(Math.round(height * ratio));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [height]);
+
+  useEffect(() => {
+    drawPreview();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [image, width, height, format, quality]);
+
+  function onFiles(selectedFiles) {
+    if (!selectedFiles || selectedFiles.length === 0) return;
+    const f = selectedFiles[0];
+    if (!f.type.startsWith('image/')) {
+      setMessage('Please upload an image file (png, jpeg, webp, etc.)');
+      return;
     }
+    setFile(f);
+    setMessage('Image loaded — edit settings and click Download');
+  }
 
-    function handleDragLeave(e) {
-      e.preventDefault();
-      dropZone.classList.remove('dragover');
+  function handleDrop(e) {
+    e.preventDefault();
+    setDragging(false);
+    const dt = e.dataTransfer;
+    onFiles(dt.files);
+  }
+
+  function handleDragOver(e) {
+    e.preventDefault();
+    setDragging(true);
+  }
+
+  function handleDragLeave(e) {
+    e.preventDefault();
+    setDragging(false);
+  }
+
+  function drawPreview() {
+    const canvas = canvasRef.current;
+    if (!canvas || !image) return;
+    canvas.width = width;
+    canvas.height = height;
+    const ctx = canvas.getContext('2d');
+    // Clear
+    ctx.fillStyle = '#111827';
+    ctx.fillRect(0, 0, width, height);
+    // Compute fit-cover style: center-crop
+    const imgRatio = image.width / image.height;
+    const canvasRatio = width / height;
+    let drawW = width, drawH = height, sx = 0, sy = 0;
+    if (imgRatio > canvasRatio) {
+      // image is wider; crop sides
+      drawH = height;
+      drawW = Math.round(height * imgRatio);
+      sx = Math.round((image.width - image.height * canvasRatio) / 2);
+      ctx.drawImage(image, sx, 0, image.width - sx * 2, image.height, 0, 0, width, height);
+    } else {
+      // image is taller; crop top/bottom
+      drawW = width;
+      drawH = Math.round(width / imgRatio);
+      sy = Math.round((image.height - image.width / canvasRatio) / 2);
+      ctx.drawImage(image, 0, sy, image.width, image.height - sy * 2, 0, 0, width, height);
     }
+    // draw subtle frame
+    ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+    ctx.lineWidth = Math.max(1, Math.min(width, height) * 0.002);
+    ctx.strokeRect(0.5, 0.5, width - 1, height - 1);
+  }
 
-    function handleDrop(e) {
-      e.preventDefault();
-      dropZone.classList.remove('dragover');
-      const file = e.dataTransfer.files[0];
-      if (file && file.type.startsWith("image/")) {
-        currentFile = file;
-        processImage(file);
-      }
-    }
-
-    // Paste image support
-    window.addEventListener('paste', (e) => {
-      const item = [...e.clipboardData.items].find(i => i.type.startsWith('image/'));
-      if (item) {
-        const file = item.getAsFile();
-        currentFile = file;
-        processImage(file);
-      }
-    });
-
-    // File input support
-    imageInput.addEventListener('change', function () {
-      const file = this.files[0];
-      if (file) {
-        currentFile = file;
-        processImage(file);
-      }
-    });
-
-    resizeButton.addEventListener('click', function () {
-      if (!currentFile) {
-        alert('Please provide an image.');
-        return;
-      }
-      processImage(currentFile);
-    });
-
-    function processImage(file) {
-      const width = parseInt(widthInput.value);
-      const height = parseInt(heightInput.value);
-      const format = formatSelect.value;
-
-      const img = new Image();
-      img.onload = function () {
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = width;
-        canvas.height = height;
-        ctx.drawImage(img, 0, 0, width, height);
-
-        let quality = 0.9;
-        let dataURL = '';
-        let byteLength = 0;
-
-        while (quality >= 0.1) {
-          dataURL = canvas.toDataURL(format, quality);
-          const byteString = atob(dataURL.split(',')[1]);
-          byteLength = byteString.length;
-          if (byteLength <= 50 * 1024) break;
-          quality -= 0.1;
+  function download() {
+    if (!canvasRef.current) return;
+    const canvas = canvasRef.current;
+    canvas.toBlob(
+      (blob) => {
+        if (!blob) {
+          setMessage('Failed to generate file');
+          return;
         }
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        const ext = format === 'image/png' ? 'png' : format === 'image/webp' ? 'webp' : 'jpg';
+        a.download = `samridh-resize-${width}x${height}.${ext}`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+        setMessage('Download started');
+      },
+      format,
+      quality
+    );
+  }
 
-        if (byteLength > 50 * 1024) {
-          alert("⚠️ Unable to resize under 50KB. Try smaller dimensions.");
-        }
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 text-slate-100 p-6 flex flex-col items-center">
+      <header className="w-full max-w-5xl mb-6">
+        <div className="flex items-center justify-between">
+          <h1 className="text-3xl font-extrabold tracking-tight">Samridh Media — Image Resizer</h1>
+          <div className="text-sm opacity-80">Developed by ER • Auto frame: 1200×720</div>
+        </div>
+      </header>
 
-        resultImage.src = dataURL;
-        resultContainer.style.display = 'block';
-        downloadButton.style.display = 'inline-block';
-      };
-      img.src = URL.createObjectURL(file);
-    }
+      <main className="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Left: uploader & controls */}
+        <section className="lg:col-span-1 p-4 rounded-2xl bg-slate-800/60 backdrop-blur-sm border border-slate-700">
+          <div
+            onDrop={handleDrop}
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            className={`w-full p-4 rounded-lg border-2 ${dragging ? 'border-dashed border-cyan-400' : 'border-dashed border-slate-600'} cursor-pointer`}
+            onClick={() => fileInputRef.current?.click()}
+          >
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={(e) => onFiles(e.target.files)}
+            />
+            <div className="flex flex-col items-center justify-center gap-3 py-6">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 opacity-80" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 16v-4a4 4 0 118 0v4m-5 4h6" />
+              </svg>
+              <div className="text-sm text-slate-300">{message}</div>
+              <div className="text-xs text-slate-400 mt-1">Click or drop — supported: PNG, JPEG, WebP</div>
+            </div>
+          </div>
 
-    function downloadImage() {
-      const link = document.createElement('a');
-      link.href = resultImage.src;
-      const format = formatSelect.value.split('/')[1];
-      link.download = `resized-image.${format}`;
-      link.click();
-    }
-  </script>
-</body>
-</html>
+          <div className="mt-4 space-y-3">
+            <label className="block text-xs uppercase tracking-wide text-slate-400">Dimensions</label>
+            <div className="flex gap-2">
+              <input type="number" value={width} onChange={(e) => setWidth(Number(e.target.value) || 1)} className="w-1/2 p-2 rounded-md bg-slate-700 text-slate-100" />
+              <input type="number" value={height} onChange={(e) => setHeight(Number(e.target.value) || 1)} className="w-1/2 p-2 rounded-md bg-slate-700 text-slate-100" />
+            </div>
+            <div className="flex items-center gap-2 text-sm">
+              <input id="aspect" type="checkbox" checked={keepAspect} onChange={(e) => setKeepAspect(e.target.checked)} />
+              <label htmlFor="aspect" className="text-slate-300">Keep aspect ratio</label>
+            </div>
+
+            <label className="block text-xs uppercase tracking-wide text-slate-400 mt-2">Format & Quality</label>
+            <div className="flex gap-2 items-center">
+              <select value={format} onChange={(e) => setFormat(e.target.value)} className="p-2 rounded-md bg-slate-700 text-slate-100">
+                <option value="image/jpeg">JPEG</option>
+                <option value="image/png">PNG</option>
+                <option value="image/webp">WebP</option>
+              </select>
+              <div className="flex-1">
+                <input type="range" min="0.1" max="1" step="0.01" value={quality} onChange={(e) => setQuality(Number(e.target.value))} />
+                <div className="text-xs text-slate-400">Quality: {Math.round(quality * 100)}%</div>
+              </div>
+            </div>
+
+            <div className="mt-4 flex gap-2">
+              <button onClick={() => { setWidth(DEFAULT_W); setHeight(DEFAULT_H); }} className="flex-1 py-2 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-slate-900 font-semibold">Reset to 1200×720</button>
+              <button onClick={() => { setFile(null); setImage(null); setMessage('Drop an image or click Upload'); }} className="py-2 px-4 rounded-lg border border-slate-600">Clear</button>
+            </div>
+
+            <div className="mt-3">
+              <button onClick={download} className="w-full py-2 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-900 font-semibold" disabled={!image}>Download</button>
+            </div>
+          </div>
+        </section>
+
+        {/* Center: preview */}
+        <section className="lg:col-span-2 p-4 rounded-2xl bg-slate-800/60 border border-slate-700">
+          <div className="flex flex-col lg:flex-row gap-4">
+            <div className="flex-1 flex flex-col items-center gap-3">
+              <div className="w-full bg-slate-900/60 rounded-lg p-4 flex flex-col items-center">
+                <div className="text-sm text-slate-300 mb-2">Preview</div>
+                <div className="w-full rounded-md overflow-hidden bg-black/60" style={{ maxWidth: '100%' }}>
+                  <canvas ref={canvasRef} className="w-full max-h-[60vh] block" />
+                </div>
+                {!image && (
+                  <div className="mt-4 text-slate-400 text-sm">No image loaded — preview will appear here</div>
+                )}
+              </div>
+
+              {image && (
+                <div className="w-full mt-2 p-3 rounded-md bg-slate-900/40 border border-slate-700 text-xs text-slate-300">
+                  Original: {image.width} × {image.height} px • Selected: {width} × {height} px
+                </div>
+              )}
+            </div>
+
+            <aside className="w-full lg:w-80 p-3 rounded-lg bg-slate-900/40 border border-slate-700">
+              <h3 className="text-sm font-semibold mb-2">Quick Actions</h3>
+              <div className="flex flex-col gap-2">
+                <button onClick={() => { setWidth(1920); setHeight(1080); }} className="py-2 rounded-md bg-slate-700">1920 × 1080</button>
+                <button onClick={() => { setWidth(1280); setHeight(720); }} className="py-2 rounded-md bg-slate-700">1280 × 720</button>
+                <button onClick={() => { setWidth(800); setHeight(800); setKeepAspect(false); }} className="py-2 rounded-md bg-slate-700">800 × 800 (square)</button>
+                <label className="text-xs text-slate-400 mt-3">Rotate preview (visual only)</label>
+                <div className="text-xs text-slate-500">Tip: use download to get final image in chosen dimensions.</div>
+              </div>
+            </aside>
+          </div>
+
+          <footer className="mt-4 text-xs text-slate-500">Samridh Media • © {new Date().getFullYear()} • Developed by ER</footer>
+        </section>
+      </main>
+
+    </div>
+  );
+}
+
